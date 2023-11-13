@@ -26,9 +26,8 @@ public class FinancialOperationController {
     @PostMapping("/add/all")
     public ResponseEntity<List<FinancialOperationResponseDto>> addAll(
             @RequestBody List<FinancialOperationEntity> financialOperations) {
-        List<FinancialOperationResponseDto> rubFinancialOperations =
-                financialOperationService.addAll(financialOperations);
-        return new ResponseEntity<>(rubFinancialOperations, HttpStatus.OK);
+        List<FinancialOperationResponseDto> response = financialOperationService.addAll(financialOperations);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @ApiOperation(value = "This method recalculates financial transactions in the selected currency " +
@@ -36,9 +35,9 @@ public class FinancialOperationController {
     @PostMapping("/recalculate")
     public ResponseEntity<List<ConvertedFinancialOperationResponseDto>> recalculateFinancialTransactionsByCurrency(
             @RequestBody FinancialOperationRequestDto conversionParameters) {
-        List<ConvertedFinancialOperationResponseDto> rubFinancialOperations =
+        List<ConvertedFinancialOperationResponseDto> response =
                 financialOperationService.recalculateAll(conversionParameters);
-        return new ResponseEntity<>(rubFinancialOperations, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

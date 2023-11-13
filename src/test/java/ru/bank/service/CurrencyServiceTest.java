@@ -91,8 +91,8 @@ public class CurrencyServiceTest {
         currenciesResponse.add(new CurrencyResponseDto(EURO,                   BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_EURO),                VCODE_US_EURO,                VCH_CODE_EUR, VUNIT_RATE_US_EURO));
 
         List<CurrencyEntity> currencies = List.of(
-                new CurrencyEntity(US_DOLLAR,              BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR),              VCODE_US_DOLLAR,              VCH_CODE_USD, VUNIT_RATE_US_DOLLAR),
-                new CurrencyEntity(EURO,                   BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_EURO),                VCODE_US_EURO,                VCH_CODE_EUR, VUNIT_RATE_US_EURO)
+                new CurrencyEntity(US_DOLLAR, BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR), VCODE_US_DOLLAR, VCH_CODE_USD, VUNIT_RATE_US_DOLLAR),
+                new CurrencyEntity(EURO,      BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_EURO),   VCODE_US_EURO,   VCH_CODE_EUR, VUNIT_RATE_US_EURO)
         );
 
         HttpURLConnection mockedConnection = mock(HttpURLConnection.class);
@@ -100,8 +100,8 @@ public class CurrencyServiceTest {
         when(SoapUtils.getCurrencyRatesByDate(anyString())).thenReturn(valuteCursOnDateList);
         when(currencyMapper.mapValuteCursOnDateListToDtoList(valuteCursOnDateList)).thenReturn(currenciesResponse);
         currenciesResponse = List.of(
-                new CurrencyResponseDto(US_DOLLAR,              BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR),              VCODE_US_DOLLAR,              VCH_CODE_USD, VUNIT_RATE_US_DOLLAR),
-                new CurrencyResponseDto(EURO,                   BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_EURO),                VCODE_US_EURO,                VCH_CODE_EUR, VUNIT_RATE_US_EURO)
+                new CurrencyResponseDto(US_DOLLAR, BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR), VCODE_US_DOLLAR, VCH_CODE_USD, VUNIT_RATE_US_DOLLAR),
+                new CurrencyResponseDto(EURO,      BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_EURO),   VCODE_US_EURO,   VCH_CODE_EUR, VUNIT_RATE_US_EURO)
         );
         when(currencyMapper.mapDtoListToEntityList(currenciesResponse)).thenReturn(currencies);
         when(currencyRepository.saveAll(anyList())).thenReturn(currencies);

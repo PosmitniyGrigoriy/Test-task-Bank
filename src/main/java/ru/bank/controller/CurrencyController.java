@@ -22,8 +22,8 @@ public class CurrencyController {
     @ApiOperation(value = "This method uploads the exchange rates for USD and EUR")
     @GetMapping("/upload")
     public ResponseEntity<List<CurrencyResponseDto>> upload() {
-        List<CurrencyResponseDto> currencies = currencyService.upload();
-        return new ResponseEntity<>(currencies, HttpStatus.OK);
+        List<CurrencyResponseDto> response = currencyService.upload();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

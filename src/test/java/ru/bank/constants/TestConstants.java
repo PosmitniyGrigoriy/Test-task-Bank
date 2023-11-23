@@ -1,5 +1,7 @@
 package ru.bank.constants;
 
+import java.time.LocalDate;
+
 public class TestConstants {
 
     public static final String AUSTRALIAN_DOLLAR      = "Австралийский доллар";
@@ -29,14 +31,22 @@ public class TestConstants {
     public static final double VUNIT_RATE_ARMENIAN_DRAM          = 22.8287;
     public static final double VUNIT_RATE_US_DOLLAR              = 91.9266;
     public static final double VUNIT_RATE_US_EURO                = 98.4076;
+    public static final double VUNIT_RATE                        = 91.9266;
 
-    public static final int FINANCIAL_OPERATION_FIRST   = 72000;
-    public static final int FINANCIAL_OPERATION_SECOND  = 48000;
-    public static final int FINANCIAL_OPERATION_THIRD   = 210000;
-    public static final int FINANCIAL_OPERATION_FOURTH  = 840000;
-    public static final int FINANCIAL_OPERATION_FIFTH   = 3894000;
-    public static final int FINANCIAL_OPERATION_SIXTH   = 384000;
-    public static final int FINANCIAL_OPERATION_SEVENTH = 570000;
+    public static final int RUB_FINANCIAL_OPERATION_FIRST   = 72000;
+    public static final int RUB_FINANCIAL_OPERATION_SECOND  = 48000;
+    public static final int RUB_FINANCIAL_OPERATION_THIRD   = 210000;
+    public static final int RUB_FINANCIAL_OPERATION_FOURTH  = 840000;
+    public static final int RUB_FINANCIAL_OPERATION_FIFTH   = 3894000;
+    public static final int RUB_FINANCIAL_OPERATION_SIXTH   = 384000;
+    public static final int RUB_FINANCIAL_OPERATION_SEVENTH = 570000;
+
+    public static final double USD_FINANCIAL_OPERATION_FIRST   = 13.05d;
+    public static final double USD_FINANCIAL_OPERATION_SECOND  = 8.7d;
+    public static final double USD_FINANCIAL_OPERATION_THIRD   = 38.07d;
+    public static final double USD_FINANCIAL_OPERATION_FOURTH  = 152.3d;
+    public static final double USD_FINANCIAL_OPERATION_FIFTH   = 706d;
+    public static final double USD_FINANCIAL_OPERATION_SIXTH   = 13.05d;
 
     public static final double ACCURACY_TO_INTEGERS     = 0.1d;
     public static final double ACCURACY_TO_TENTHS       = 0.01d;
@@ -48,6 +58,9 @@ public class TestConstants {
     public static final int DAY_OF_MONTH_3 = 3;
     public static final int DAY_OF_MONTH_5 = 5;
     public static final int DAY_OF_MONTH_9 = 9;
+
+    public static final LocalDate DATE_FROM = LocalDate.of(2023, 11, 1);
+    public static final LocalDate DATE_TO   = LocalDate.of(2023, 11, 5);
 
     public static final int ZERO  = 0;
     public static final int ONE   = 1;

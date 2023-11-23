@@ -28,7 +28,7 @@ public class FinancialOperationMapper {
         }
         FinancialOperationResponseDto financialOperationResponse = new FinancialOperationResponseDto();
         financialOperationResponse.setId(financialOperation.getId());
-        financialOperationResponse.setDate(financialOperation.getDate());
+        financialOperationResponse.setDateAt(financialOperation.getDateAt());
         financialOperationResponse.setDescription(financialOperation.getDescription());
         financialOperationResponse.setAmount(financialOperation.getAmount());
         return financialOperationResponse;
@@ -52,7 +52,7 @@ public class FinancialOperationMapper {
         }
         ConvertedFinancialOperationResponseDto convertedFinancialOperation = new ConvertedFinancialOperationResponseDto();
         convertedFinancialOperation.setId(financialOperation.getId());
-        convertedFinancialOperation.setDate(financialOperation.getDate());
+        convertedFinancialOperation.setDateAt(financialOperation.getDateAt());
         convertedFinancialOperation.setDescription(financialOperation.getDescription());
         convertedFinancialOperation.setAmount(financialOperation.getAmount());
         return convertedFinancialOperation;

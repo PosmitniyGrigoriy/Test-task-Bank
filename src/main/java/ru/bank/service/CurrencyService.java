@@ -24,8 +24,10 @@ public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
 
-    public Optional<CurrencyEntity> findByVchCode(CurrencyEnum vchCode) {
-        return currencyRepository.findByVchCode(vchCode.name());
+    public Optional<List<CurrencyEntity>> findByDateRangeAndVchCode(LocalDate dateFrom,
+                                                                    LocalDate dateTo,
+                                                                    CurrencyEnum vchCode) {
+        return currencyRepository.findByDateRangeAndVchCode(dateFrom, dateTo, vchCode.name());
     }
 
     @Transactional
@@ -35,10 +37,7 @@ public class CurrencyService {
         currenciesResponse.removeIf(currency -> !currency.getVchCode().equals(CurrencyEnum.USD.name()) &&
                 !currency.getVchCode().equals(CurrencyEnum.EUR.name()));
         List<CurrencyEntity> currencies = currencyMapper.mapDtoListToEntityList(currenciesResponse);
-        currencies.forEach(currency -> {
-            if (currency.getVchCode().equals(CurrencyEnum.USD.name())) { currency.setId(1); }
-            if (currency.getVchCode().equals(CurrencyEnum.EUR.name())) { currency.setId(2); }
-        });
+        currencies.forEach(currency -> currency.setDateAt(LocalDate.now()));
         currencyRepository.saveAll(currencies);
         log.info("Successfully loaded exchange rates for USD and EUR");
         return currenciesResponse;

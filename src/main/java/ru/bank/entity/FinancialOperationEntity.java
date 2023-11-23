@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class FinancialOperationEntity extends BaseEntity {
 
     @NotNull
-    private LocalDate date;
+    private LocalDate dateAt;
 
     @NotBlank
     private String description;

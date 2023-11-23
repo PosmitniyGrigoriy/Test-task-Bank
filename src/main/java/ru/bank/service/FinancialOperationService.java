@@ -46,25 +46,32 @@ public class FinancialOperationService {
         if(!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-        double vunitRate = currencyService.findByVchCode(conversionParameters.getVchCode())
-                .map(CurrencyEntity::getVunitRate)
-                .orElseThrow(() -> new EntityDoesNotExistException(CurrencyEntity.class, conversionParameters.getVchCode()));
+        List<CurrencyEntity> exchangeRates = currencyService.findByDateRangeAndVchCode(conversionParameters.getDateFrom(),
+                        conversionParameters.getDateTo(),
+                        conversionParameters.getVchCode())
+                .orElseThrow(() -> new EntityDoesNotExistException(conversionParameters.getDateFrom(),
+                        conversionParameters.getDateTo(),
+                        conversionParameters.getVchCode()));
         List<FinancialOperationEntity> periodFinancialOperations =
                 financialOperationRepository.getFinancialOperationsForPeriod(conversionParameters.getDateFrom(),
-                                                                             conversionParameters.getDateTo())
+                                conversionParameters.getDateTo())
                         .orElseThrow(() -> new NoFoundFinancialOperationsException(conversionParameters.getDateFrom(),
                                 conversionParameters.getDateTo()));
         List<ConvertedFinancialOperationResponseDto> convertedFinancialOperations =
                 financialOperationMapper.mapEntitiesToConvertedDtoList(periodFinancialOperations);
-        convertedFinancialOperations = convertAmountToCurrency(convertedFinancialOperations, vunitRate);
+        convertedFinancialOperations = convertAmountToCurrency(convertedFinancialOperations, exchangeRates);
         log.info("Successfully recalculated financial operations in the selected currency for the specified period");
         return convertedFinancialOperations;
     }
 
-    private List<ConvertedFinancialOperationResponseDto> convertAmountToCurrency(
-            List<ConvertedFinancialOperationResponseDto> financialOperations, double vunitRate) {
-        financialOperations.forEach(financialOperation ->
-                financialOperation.setAmount(Math.round(financialOperation.getAmount() / 60 / vunitRate * 100.0) / 100.0));
+    public List<ConvertedFinancialOperationResponseDto> convertAmountToCurrency(
+            List<ConvertedFinancialOperationResponseDto> financialOperations, List<CurrencyEntity> exchangeRates) {
+        financialOperations.forEach(financialOperation -> exchangeRates.forEach(currencyExchangeRate -> {
+            if (financialOperation.getDateAt().equals(currencyExchangeRate.getDateAt())) {
+                financialOperation.setAmount(Math.round(financialOperation.getAmount() / 60 /
+                        currencyExchangeRate.getVunitRate() * 100.0) / 100.0);
+            }
+        }));
         return financialOperations;
     }
 

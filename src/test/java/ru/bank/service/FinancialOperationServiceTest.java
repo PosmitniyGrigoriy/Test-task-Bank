@@ -16,6 +16,7 @@ import ru.bank.exception.EntityDoesNotExistException;
 import ru.bank.exception.NoFoundFinancialOperationsException;
 import ru.bank.mapper.FinancialOperationMapper;
 import ru.bank.repository.FinancialOperationRepository;
+import ru.bank.utils.CurrencyUtils;
 
 import javax.validation.*;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -53,24 +54,24 @@ public class FinancialOperationServiceTest {
     public void testAddAllSuccess() {
         // Preparation
         List<FinancialOperationEntity> financialOperations = List.of(
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_FIRST),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_SECOND),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_THIRD),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FOURTH),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FIFTH),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, FINANCIAL_OPERATION_FIRST),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, FINANCIAL_OPERATION_SIXTH),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, FINANCIAL_OPERATION_SEVENTH)
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_SECOND),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_THIRD),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FOURTH),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FIFTH),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, RUB_FINANCIAL_OPERATION_SIXTH),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, RUB_FINANCIAL_OPERATION_SEVENTH)
         );
         List<FinancialOperationResponseDto> response = List.of(
-                new FinancialOperationResponseDto(ONE,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_FIRST),
-                new FinancialOperationResponseDto(TWO,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_SECOND),
-                new FinancialOperationResponseDto(THREE, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_THIRD),
-                new FinancialOperationResponseDto(FOUR,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FOURTH),
-                new FinancialOperationResponseDto(FIVE,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FIFTH),
-                new FinancialOperationResponseDto(SIX,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, FINANCIAL_OPERATION_FIRST),
-                new FinancialOperationResponseDto(SEVEN, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, FINANCIAL_OPERATION_SIXTH),
-                new FinancialOperationResponseDto(EIGHT, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, FINANCIAL_OPERATION_SEVENTH)
+                new FinancialOperationResponseDto(ONE,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new FinancialOperationResponseDto(TWO,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_SECOND),
+                new FinancialOperationResponseDto(THREE, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_THIRD),
+                new FinancialOperationResponseDto(FOUR,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FOURTH),
+                new FinancialOperationResponseDto(FIVE,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FIFTH),
+                new FinancialOperationResponseDto(SIX,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new FinancialOperationResponseDto(SEVEN, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, RUB_FINANCIAL_OPERATION_SIXTH),
+                new FinancialOperationResponseDto(EIGHT, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_9), INCOME, RUB_FINANCIAL_OPERATION_SEVENTH)
         );
         when(validator.validate(financialOperations)).thenReturn(Collections.emptySet());
         when(financialOperationRepository.saveAll(financialOperations)).thenReturn(financialOperations);
@@ -90,66 +91,66 @@ public class FinancialOperationServiceTest {
     @Test
     public void testAddAllWithConstraintViolationToFieldDate() {
         // Preparation
-        List<FinancialOperationEntity> inputFinancialOperations = List.of(
-                new FinancialOperationEntity(null, INCOME, FINANCIAL_OPERATION_FIRST)
+        List<FinancialOperationEntity> financialOperations = List.of(
+                new FinancialOperationEntity(null, INCOME, RUB_FINANCIAL_OPERATION_FIRST)
         );
         Set<ConstraintViolation<List<FinancialOperationEntity>>> violations = new HashSet<>();
         violations.add(createConstraintViolationToFieldDate());
-        when(validator.validate(inputFinancialOperations)).thenReturn(violations);
+        when(validator.validate(financialOperations)).thenReturn(violations);
 
         // Method Call and Check
         assertThrows(ConstraintViolationException.class, () -> {
-            financialOperationService.addAll(inputFinancialOperations);
+            financialOperationService.addAll(financialOperations);
         });
     }
 
     @Test
     public void testAddAllWithConstraintViolationToFieldDescription() {
         // Preparation
-        List<FinancialOperationEntity> inputFinancialOperations = List.of(
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), null, FINANCIAL_OPERATION_FIRST)
+        List<FinancialOperationEntity> financialOperations = List.of(
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), null, RUB_FINANCIAL_OPERATION_FIRST)
         );
         Set<ConstraintViolation<List<FinancialOperationEntity>>> violations = new HashSet<>();
         violations.add(createConstraintViolationToFieldDescription());
-        when(validator.validate(inputFinancialOperations)).thenReturn(violations);
+        when(validator.validate(financialOperations)).thenReturn(violations);
 
         // Method Call and Check
         assertThrows(ConstraintViolationException.class, () -> {
-            financialOperationService.addAll(inputFinancialOperations);
+            financialOperationService.addAll(financialOperations);
         });
     }
 
     @Test
     public void testAddAllWithConstraintViolationToFieldAmount() {
         // Preparation
-        List<FinancialOperationEntity> inputFinancialOperations = List.of(
+        List<FinancialOperationEntity> financialOperations = List.of(
                 new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, ZERO)
         );
         Set<ConstraintViolation<List<FinancialOperationEntity>>> violations = new HashSet<>();
         violations.add(createConstraintViolationToFieldAmount());
-        when(validator.validate(inputFinancialOperations)).thenReturn(violations);
+        when(validator.validate(financialOperations)).thenReturn(violations);
 
         // Method Call and Check
         assertThrows(ConstraintViolationException.class, () -> {
-            financialOperationService.addAll(inputFinancialOperations);
+            financialOperationService.addAll(financialOperations);
         });
     }
 
     @Test
     public void testAddAllWithConstraintViolationToAllFields() {
         // Preparation
-        List<FinancialOperationEntity> inputFinancialOperations = List.of(
+        List<FinancialOperationEntity> financialOperations = List.of(
                 new FinancialOperationEntity(null, null, ZERO)
         );
         Set<ConstraintViolation<List<FinancialOperationEntity>>> violations = new HashSet<>();
         violations.add(createConstraintViolationToFieldDate());
         violations.add(createConstraintViolationToFieldDescription());
         violations.add(createConstraintViolationToFieldAmount());
-        when(validator.validate(inputFinancialOperations)).thenReturn(violations);
+        when(validator.validate(financialOperations)).thenReturn(violations);
 
         // Method Call and Check
         assertThrows(ConstraintViolationException.class, () -> {
-            financialOperationService.addAll(inputFinancialOperations);
+            financialOperationService.addAll(financialOperations);
         });
     }
 
@@ -157,53 +158,66 @@ public class FinancialOperationServiceTest {
     public void testRecalculateAllSuccess() {
         // Preparation
         List<FinancialOperationEntity> financialOperations = List.of(
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_FIRST),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_SECOND),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_THIRD),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FOURTH),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FIFTH),
-                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, FINANCIAL_OPERATION_FIRST)
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_SECOND),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_THIRD),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FOURTH),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FIFTH),
+                new FinancialOperationEntity(LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, RUB_FINANCIAL_OPERATION_FIRST)
         );
         List<ConvertedFinancialOperationResponseDto> response = List.of(
-                new ConvertedFinancialOperationResponseDto(ONE,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_FIRST),
-                new ConvertedFinancialOperationResponseDto(TWO,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_SECOND),
-                new ConvertedFinancialOperationResponseDto(THREE, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, FINANCIAL_OPERATION_THIRD),
-                new ConvertedFinancialOperationResponseDto(FOUR,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FOURTH),
-                new ConvertedFinancialOperationResponseDto(FIVE,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, FINANCIAL_OPERATION_FIFTH),
-                new ConvertedFinancialOperationResponseDto(SIX,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, FINANCIAL_OPERATION_FIRST)
+                new ConvertedFinancialOperationResponseDto(ONE,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_FIRST),
+                new ConvertedFinancialOperationResponseDto(TWO,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_SECOND),
+                new ConvertedFinancialOperationResponseDto(THREE, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, RUB_FINANCIAL_OPERATION_THIRD),
+                new ConvertedFinancialOperationResponseDto(FOUR,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FOURTH),
+                new ConvertedFinancialOperationResponseDto(FIVE,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, RUB_FINANCIAL_OPERATION_FIFTH),
+                new ConvertedFinancialOperationResponseDto(SIX,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, RUB_FINANCIAL_OPERATION_FIRST)
+        );
+        List<ConvertedFinancialOperationResponseDto> response2 = List.of(
+                new ConvertedFinancialOperationResponseDto(ONE,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, USD_FINANCIAL_OPERATION_FIRST),
+                new ConvertedFinancialOperationResponseDto(TWO,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, USD_FINANCIAL_OPERATION_SECOND),
+                new ConvertedFinancialOperationResponseDto(THREE, LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), INCOME, USD_FINANCIAL_OPERATION_THIRD),
+                new ConvertedFinancialOperationResponseDto(FOUR,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, USD_FINANCIAL_OPERATION_FOURTH),
+                new ConvertedFinancialOperationResponseDto(FIVE,  LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_3), INCOME, USD_FINANCIAL_OPERATION_FIFTH),
+                new ConvertedFinancialOperationResponseDto(SIX,   LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), INCOME, USD_FINANCIAL_OPERATION_SIXTH)
         );
         FinancialOperationRequestDto conversionParameters = new FinancialOperationRequestDto(
                 LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), CurrencyEnum.USD);
-        CurrencyEntity currency = new CurrencyEntity();
-        currency.setVunitRate(VUNIT_RATE_US_DOLLAR);
         Set<ConstraintViolation<FinancialOperationRequestDto>> violations = Collections.emptySet();
-        when(validator.validate(conversionParameters)).thenReturn(violations);
-        when(currencyService.findByVchCode(CurrencyEnum.USD)).thenReturn(Optional.of(currency));
+        List<CurrencyEntity> exchangeRates = CurrencyUtils.createCurrencies(CurrencyEnum.USD.name(), CurrencyEnum.USD.name());
+                when(validator.validate(conversionParameters)).thenReturn(violations);
+        when(currencyService.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD))
+                .thenReturn(Optional.of(exchangeRates));
         when(financialOperationRepository.getFinancialOperationsForPeriod(
                 conversionParameters.getDateFrom(), conversionParameters.getDateTo()))
                 .thenReturn(Optional.of(financialOperations));
         List<ConvertedFinancialOperationResponseDto> convertedFinancialOperations = response;
         when(financialOperationMapper.mapEntitiesToConvertedDtoList(financialOperations))
                 .thenReturn(response);
+        financialOperationService = spy(financialOperationService);
+        doReturn(response2)
+                .when(financialOperationService)
+                .convertAmountToCurrency(response, exchangeRates);
+        convertedFinancialOperations = response2;
 
         // Method Call
         List<ConvertedFinancialOperationResponseDto> result =
                 financialOperationService.recalculateAll(conversionParameters);
+        System.out.println(result);
+        // Checks
         verify(validator).validate(conversionParameters);
-        verify(currencyService).findByVchCode(CurrencyEnum.USD);
+        verify(currencyService).findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD);
         verify(financialOperationRepository).getFinancialOperationsForPeriod(
                 conversionParameters.getDateFrom(), conversionParameters.getDateTo());
         verify(financialOperationMapper).mapEntitiesToConvertedDtoList(financialOperations);
-
-        // Checks
         assertEquals(convertedFinancialOperations, result);
         assertEquals(convertedFinancialOperations.size(), result.size());
-        assertEquals(13.05d, result.get(ZERO).getAmount(),  ACCURACY_TO_HUNDREDTHS);
-        assertEquals(8.7d,   result.get(ONE).getAmount(),   ACCURACY_TO_TENTHS);
-        assertEquals(38.07d, result.get(TWO).getAmount(),   ACCURACY_TO_HUNDREDTHS);
-        assertEquals(152.3d, result.get(THREE).getAmount(), ACCURACY_TO_TENTHS);
-        assertEquals(706d,   result.get(FOUR).getAmount(),  ACCURACY_TO_INTEGERS);
-        assertEquals(13.05d, result.get(FIVE).getAmount(),  ACCURACY_TO_HUNDREDTHS);
+        assertEquals(USD_FINANCIAL_OPERATION_FIRST, result.get(ZERO).getAmount(),  ACCURACY_TO_HUNDREDTHS);
+        assertEquals(USD_FINANCIAL_OPERATION_SECOND,   result.get(ONE).getAmount(),   ACCURACY_TO_TENTHS);
+        assertEquals(USD_FINANCIAL_OPERATION_THIRD, result.get(TWO).getAmount(),   ACCURACY_TO_HUNDREDTHS);
+        assertEquals(USD_FINANCIAL_OPERATION_FOURTH, result.get(THREE).getAmount(), ACCURACY_TO_TENTHS);
+        assertEquals(USD_FINANCIAL_OPERATION_FIFTH,   result.get(FOUR).getAmount(),  ACCURACY_TO_INTEGERS);
+        assertEquals(USD_FINANCIAL_OPERATION_SIXTH, result.get(FIVE).getAmount(),  ACCURACY_TO_HUNDREDTHS);
     }
 
     @Test
@@ -211,11 +225,10 @@ public class FinancialOperationServiceTest {
         // Preparation
         FinancialOperationRequestDto conversionParameters = new FinancialOperationRequestDto(
                 LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), CurrencyEnum.USD);
-        CurrencyEntity currency = new CurrencyEntity();
-        currency.setVunitRate(VUNIT_RATE_US_DOLLAR);
         Set<ConstraintViolation<FinancialOperationRequestDto>> violations = Collections.emptySet();
         when(validator.validate(conversionParameters)).thenReturn(violations);
-        when(currencyService.findByVchCode(CurrencyEnum.USD)).thenReturn(Optional.of(currency));
+        when(currencyService.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD))
+                .thenReturn(Optional.of(CurrencyUtils.createCurrencies(CurrencyEnum.USD.name(), CurrencyEnum.USD.name())));
         when(financialOperationRepository.getFinancialOperationsForPeriod(
                 conversionParameters.getDateFrom(), conversionParameters.getDateTo()))
                 .thenReturn(Optional.empty());
@@ -227,13 +240,14 @@ public class FinancialOperationServiceTest {
     }
 
     @Test
-    public void testRecalculateAll_ThrowsEntityDoesNotExistException() {
+    public void testRecalculateAllThrowsEntityDoesNotExistException() {
         // Preparation
         FinancialOperationRequestDto conversionParameters = new FinancialOperationRequestDto(
                 LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_1), LocalDate.of(YEAR, MONTH, DAY_OF_MONTH_5), CurrencyEnum.USD);
         Set<ConstraintViolation<FinancialOperationRequestDto>> violations = Collections.emptySet();
         when(validator.validate(conversionParameters)).thenReturn(violations);
-        when(currencyService.findByVchCode(CurrencyEnum.USD)).thenReturn(Optional.empty());
+        when(currencyService.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD))
+                .thenReturn(Optional.empty());
 
         // Method Call and Check
         assertThrows(EntityDoesNotExistException.class, () -> {

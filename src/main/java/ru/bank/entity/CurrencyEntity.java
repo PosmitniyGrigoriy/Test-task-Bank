@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @ToString
 @AllArgsConstructor
@@ -36,5 +38,8 @@ public class CurrencyEntity extends BaseEntity {
 
     @Min(1)
     private double vunitRate;
+
+    @NotNull
+    private LocalDate dateAt;
 
 }

@@ -26,6 +26,7 @@ http://localhost:8080/swagger-ui/index.html
 ## How to connect to the H2 database
 ```
 Address:  http://localhost:8080/h2-console
+Url:      jdbc:h2:mem:testdb
 Username: sa
 Password: password
 ```

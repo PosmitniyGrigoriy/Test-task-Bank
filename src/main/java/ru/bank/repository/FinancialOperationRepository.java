@@ -13,7 +13,7 @@ public interface FinancialOperationRepository extends JpaRepository<FinancialOpe
 
     @Query(value = "SELECT * " +
                    "FROM RUB_FINANCIAL_OPERATIONS t " +
-                   "WHERE t.date BETWEEN :dateFrom AND :dateTo", nativeQuery = true)
+                   "WHERE t.date_at BETWEEN :dateFrom AND :dateTo", nativeQuery = true)
     Optional<List<FinancialOperationEntity>> getFinancialOperationsForPeriod(@Param("dateFrom") LocalDate dateFrom,
                                                                              @Param("dateTo") LocalDate dateTo);
 

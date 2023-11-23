@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 public class FinancialOperationResponseDto {
     private int id;
-    private LocalDate date;
+    private LocalDate dateAt;
     private String description;
     private int amount;
 }

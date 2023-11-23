@@ -10,11 +10,13 @@ import ru.bank.enumeration.CurrencyEnum;
 import ru.bank.integrations.ru.cbr.ValuteCursOnDate;
 import ru.bank.mapper.CurrencyMapper;
 import ru.bank.repository.CurrencyRepository;
+import ru.bank.utils.CurrencyUtils;
 import ru.bank.utils.HttpUtils;
 import ru.bank.utils.SoapUtils;
 
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,31 +45,35 @@ public class CurrencyServiceTest {
     @Test
     public void testFindByVchCodeByUSD() {
         // Preparation
-        CurrencyEntity currency = new CurrencyEntity();
-        currency.setVchCode(CurrencyEnum.USD.name());
-        when(currencyRepository.findByVchCode(CurrencyEnum.USD.name())).thenReturn(Optional.of(currency));
+        List<CurrencyEntity> currencies = CurrencyUtils.createCurrencies(CurrencyEnum.USD.name(), CurrencyEnum.USD.name());
+        when(currencyRepository.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD.name()))
+                .thenReturn(Optional.of(currencies));
 
         // Method Call
-        Optional<CurrencyEntity> result = currencyService.findByVchCode(CurrencyEnum.USD);
+        Optional<List<CurrencyEntity>> result =
+                currencyService.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.USD);
 
         // Checks
         assertTrue(result.isPresent());
-        assertEquals(currency, result.get());
+        assertEquals(currencies, result.get());
+        assertEquals(2, result.get().size());
     }
 
     @Test
     public void testFindByVchCodeByEUR() {
         // Preparation
-        CurrencyEntity currency = new CurrencyEntity();
-        currency.setVchCode(CurrencyEnum.EUR.name());
-        when(currencyRepository.findByVchCode(CurrencyEnum.EUR.name())).thenReturn(Optional.of(currency));
+        List<CurrencyEntity> currencies = CurrencyUtils.createCurrencies(CurrencyEnum.EUR.name(), CurrencyEnum.EUR.name());
+        when(currencyRepository.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.EUR.name()))
+                .thenReturn(Optional.of(currencies));
 
         // Method Call
-        Optional<CurrencyEntity> result = currencyService.findByVchCode(CurrencyEnum.EUR);
+        Optional<List<CurrencyEntity>> result =
+                currencyService.findByDateRangeAndVchCode(DATE_FROM, DATE_TO, CurrencyEnum.EUR);
 
         // Checks
         assertTrue(result.isPresent());
-        assertEquals(currency, result.get());
+        assertEquals(currencies, result.get());
+        assertEquals(2, result.get().size());
     }
 
     @Disabled
@@ -91,8 +97,8 @@ public class CurrencyServiceTest {
         currenciesResponse.add(new CurrencyResponseDto(EURO,                   BigDecimal.valueOf(ONE),     BigDecimal.valueOf(VUNIT_RATE_US_EURO),                VCODE_US_EURO,                VCH_CODE_EUR, VUNIT_RATE_US_EURO));
 
         List<CurrencyEntity> currencies = List.of(
-                new CurrencyEntity(US_DOLLAR, BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR), VCODE_US_DOLLAR, VCH_CODE_USD, VUNIT_RATE_US_DOLLAR),
-                new CurrencyEntity(EURO,      BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_EURO),   VCODE_US_EURO,   VCH_CODE_EUR, VUNIT_RATE_US_EURO)
+                new CurrencyEntity(US_DOLLAR, BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_DOLLAR), VCODE_US_DOLLAR, VCH_CODE_USD, VUNIT_RATE_US_DOLLAR, LocalDate.now()),
+                new CurrencyEntity(EURO,      BigDecimal.valueOf(ONE), BigDecimal.valueOf(VUNIT_RATE_US_EURO),   VCODE_US_EURO,   VCH_CODE_EUR, VUNIT_RATE_US_EURO, LocalDate.now())
         );
 
         HttpURLConnection mockedConnection = mock(HttpURLConnection.class);

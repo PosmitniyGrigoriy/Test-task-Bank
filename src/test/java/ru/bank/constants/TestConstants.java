@@ -41,12 +41,12 @@ public class TestConstants {
     public static final int RUB_FINANCIAL_OPERATION_SIXTH   = 384000;
     public static final int RUB_FINANCIAL_OPERATION_SEVENTH = 570000;
 
-    public static final double USD_FINANCIAL_OPERATION_FIRST   = 13.05d;
-    public static final double USD_FINANCIAL_OPERATION_SECOND  = 8.7d;
-    public static final double USD_FINANCIAL_OPERATION_THIRD   = 38.07d;
-    public static final double USD_FINANCIAL_OPERATION_FOURTH  = 152.3d;
-    public static final double USD_FINANCIAL_OPERATION_FIFTH   = 706d;
-    public static final double USD_FINANCIAL_OPERATION_SIXTH   = 13.05d;
+    public static final double USD_FINANCIAL_OPERATION_FIRST   = 7.82d;
+    public static final double USD_FINANCIAL_OPERATION_SECOND  = 5.21d;
+    public static final double USD_FINANCIAL_OPERATION_THIRD   = 22.82d;
+    public static final double USD_FINANCIAL_OPERATION_FOURTH  = 90.15d;
+    public static final double USD_FINANCIAL_OPERATION_FIFTH   = 418.55d;
+    public static final double USD_FINANCIAL_OPERATION_SIXTH   = 7.73d;
 
     public static final double ACCURACY_TO_INTEGERS     = 0.1d;
     public static final double ACCURACY_TO_TENTHS       = 0.01d;

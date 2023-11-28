@@ -195,9 +195,9 @@ public class FinancialOperationServiceTest {
         when(financialOperationMapper.mapEntitiesToConvertedDtoList(financialOperations))
                 .thenReturn(response);
         financialOperationService = spy(financialOperationService);
-        doReturn(response2)
-                .when(financialOperationService)
-                .convertAmountToCurrency(response, exchangeRates);
+//        doReturn(response2)
+//                .when(financialOperationService)
+//                .convertAmountToCurrency(response, exchangeRates);
         convertedFinancialOperations = response2;
 
         // Method Call

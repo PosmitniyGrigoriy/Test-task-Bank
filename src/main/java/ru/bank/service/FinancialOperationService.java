@@ -17,7 +17,9 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -59,20 +61,30 @@ public class FinancialOperationService {
                                 conversionParameters.getDateTo()));
         List<ConvertedFinancialOperationResponseDto> convertedFinancialOperations =
                 financialOperationMapper.mapEntitiesToConvertedDtoList(periodFinancialOperations);
-        convertedFinancialOperations = convertAmountToCurrency(convertedFinancialOperations, exchangeRates);
+        convertAmountToCurrency(convertedFinancialOperations, exchangeRates);
         log.info("Successfully recalculated financial operations in the selected currency for the specified period");
         return convertedFinancialOperations;
     }
 
-    public List<ConvertedFinancialOperationResponseDto> convertAmountToCurrency(
+    private void convertAmountToCurrency(
             List<ConvertedFinancialOperationResponseDto> financialOperations, List<CurrencyEntity> exchangeRates) {
-        financialOperations.forEach(financialOperation -> exchangeRates.forEach(currencyExchangeRate -> {
-            if (financialOperation.getDateAt().equals(currencyExchangeRate.getDateAt())) {
-                financialOperation.setAmount(Math.round(financialOperation.getAmount() / 60 /
-                        currencyExchangeRate.getVunitRate() * 100.0) / 100.0);
-            }
-        }));
-        return financialOperations;
+        financialOperations.forEach(financialOperation -> {
+            double vunitRate = exchangeRates
+                    .stream()
+                    .filter(rate -> (financialOperation.getDateAt().equals(rate.getDateAt()) ||
+                            (rate.getDateAt().isBefore(financialOperation.getDateAt()))))
+                    .min((o1, o2) -> o2.getDateAt().compareTo(o1.getDateAt()))
+                    .orElseThrow().getVunitRate();
+           financialOperation.setAmount(convertToCurrency(financialOperation.getAmount(), vunitRate));
+        });
+    }
+
+    private double convertToCurrency(double amount, double vunitRate) {
+        return makeShortAmount(amount / 100.0 / vunitRate);
+    }
+
+    private double makeShortAmount(double amount) {
+        return Math.round(amount * 100.0) / 100.0; // 8.47465656437 => 847 => 8.47
     }
 
 }
